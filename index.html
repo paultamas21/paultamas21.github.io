@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[BAND NAME] | Official Website</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- FLOATING MENU BUTTON --- */
+.floating-menu {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 99999;
+}
+
+.floating-toggle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    transition: 0.3s;
+}
+
+.floating-toggle:hover {
+    transform: scale(1.1);
+}
+
+/* Menu Items */
+.floating-links {
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    background: rgba(0,0,0,0.9);
+    padding: 1rem;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: 0.3s ease-in-out;
+    border: 1px solid #333;
+}
+
+.floating-links a {
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+}
+
+.floating-links a:hover {
+    color: var(--primary);
+}
+
+.floating-links.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0);
+}
+    
+        :root {
+            --primary: #e60000;     
+            --bg-dark: #0f0f0f;      
+            --bg-card: #1a1a1a;      
+            --text-main: #f0f0f0;    
+            --text-muted: #aaaaaa;   
+            --font-head: 'Impact', 'Arial Black', sans-serif;
+            --font-body: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --nav-height: 70px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+        img { width: 100%; display: block; }
+
+    
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--nav-height);
+            background: rgba(0, 0, 0, 0.95);
+            padding: 0 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 9999; /* Highest priority */
+            border-bottom: 2px solid #222;
+        }
+
+        .logo {
+            font-family: var(--font-head);
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: white;
+        }
+        .logo span { color: var(--primary); }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            color: #ddd;
+        }
+
+        .nav-links a:hover { color: var(--primary); }
+
+        
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        /* --- 3. MOBILE MENU LOGIC --- */
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+
+            .nav-links {
+                position: fixed;
+                top: var(--nav-height);
+                right: -100%; /* Hidden off-screen to the right */
+                width: 100%;
+                height: calc(100vh - var(--nav-height)); /* Full height minus header */
+                background: black; /* Solid background */
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transition: 0.4s ease-in-out;
+                gap: 3rem;
+                border-top: 1px solid #333;
+            }
+
+            
+            .nav-links.active {
+                right: 0; 
+            }
+
+            .nav-links a {
+                font-size: 1.5rem; 
+        }
+
+        /* --- 4. HERO CAROUSEL --- */
+        .hero-slider {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-top: 0; /* Nav sits on top */
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+        }
+        
+        /* Darken the image so text pops */
+        .slide::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+        }
+
+        .slide.active { opacity: 1; }
+        
+        .hero-content {
+            z-index: 2;
+            padding: 0 1rem;
+        }
+
+        .hero-content h1 {
+            font-family: var(--font-head);
+            font-size: 4rem;
+            text-transform: uppercase;
+            line-height: 1;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px black;
+        }
+
+        /* --- 5. BUTTONS & SECTIONS --- */
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--primary);
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: 2px solid var(--primary);
+            margin: 10px;
+        }
+        .btn:hover { background: transparent; color: var(--primary); }
+        .btn-outline { background: transparent; border: 2px solid white; }
+        .btn-outline:hover { background: white; color: black; border-color: white; }
+
+        section { padding: 5rem 10%; }
+        
+        .section-header { text-align: center; margin-bottom: 3rem; }
+        .section-title {
+            font-family: var(--font-head);
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            border-bottom: 3px solid var(--primary);
+            display: inline-block;
+            padding-bottom: 0.5rem;
+        }
+
+        /* --- 6. GRID LAYOUTS --- */
+        .gallery-grid, .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Gallery */
+        .gallery-item { height: 250px; overflow: hidden; }
+        .gallery-item img { height: 100%; object-fit: cover; transition: 0.3s; }
+        .gallery-item:hover img { transform: scale(1.1); }
+
+        /* Cards */
+        .card { background: var(--bg-card); transition: 0.3s; }
+        .card:hover { transform: translateY(-5px); border-bottom: 3px solid var(--primary); }
+        .card img { height: 300px; object-fit: cover; filter: grayscale(100%); transition: 0.3s; }
+        .card:hover img { filter: grayscale(0%); }
+        .card-content { padding: 1.5rem; text-align: center; }
+
+        /* Testimonials */
+        .testimonials { background: #111; text-align: center; }
+        .quote-box { max-width: 800px; margin: 0 auto; padding: 1rem; }
+        .quote-text { font-style: italic; font-size: 1.2rem; color: #ddd; }
+
+        /* Footer */
+        footer { background: black; padding: 4rem 5%; border-top: 2px solid var(--primary); }
+        .footer-container { display: flex; flex-wrap: wrap; gap: 2rem; justify-content: space-between; }
+        .footer-block { min-width: 250px; margin-bottom: 1rem; }
+        .footer-block h4 { color: white; text-transform: uppercase; margin-bottom: 1rem; }
+        .social-icons a { font-size: 1.5rem; margin-right: 15px; color: #888; }
+        .social-icons a:hover { color: var(--primary); }
+
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 3rem; }
+            section { padding: 4rem 5%; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">
+            <i class="fa-solid fa-bolt"></i> [BAND]<span>NAME</span>
+        </div>
+        
+        <div class="hamburger" id="hamburger">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+
+        <ul class="nav-links" id="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#media">Media</a></li>
+            <li><a href="#band">Band</a></li>
+            <li><a href="#reviews">Reviews</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <div id="home" class="hero-slider">
+        <div class="slide active" style="background-image: url('https://placehold.co/1920x1080/222/FFF?text=Live+Concert');"></div>
+        <div class="slide" style="background-image: url('https://placehold.co/1920x1080/333/FFF?text=Band+Photo');"></div>
+        <div class="slide" style="background-image: url('https://placehold.co/1920x1080/111/FFF?text=Crowd+Shot');"></div>
+
+        <div class="hero-content">
+            <h1>[BAND NAME]</h1>
+            <p style="font-size: 1.2rem; margin-bottom: 2rem;">THE NEW ALBUM - AVAILABLE NOW</p>
+            <a href="#media" class="btn">LISTEN NOW</a>
+            <a href="#contact" class="btn btn-outline">TOUR DATES</a>
+        </div>
+    </div>
+
+    <section id="media">
+        <div class="section-header">
+            <h2 class="section-title">Media Gallery</h2>
+            <p>Highlights from the road.</p>
+        </div>
+        <div class="gallery-grid">
+            <div class="gallery-item"><img src="https://placehold.co/600x400/222/FFF?text=Live+Action" alt="Gallery"></div>
+            <div class="gallery-item"><img src="https://placehold.co/600x400/333/FFF?text=Backstage" alt="Gallery"></div>
+            <div class="gallery-item"><img src="https://placehold.co/600x400/444/FFF?text=Studio" alt="Gallery"></div>
+            <div class="gallery-item"><img src="https://placehold.co/600x400/555/FFF?text=Fans" alt="Gallery"></div>
+        </div>
+    </section>
+
+    <section id="band">
+        <div class="section-header">
+            <h2 class="section-title">The Lineup</h2>
+        </div>
+        <div class="card-grid">
+            <div class="card">
+                <img src="https://placehold.co/400x500/1a1a1a/FFF?text=Vocals" alt="Member">
+                <div class="card-content">
+                    <div style="font-weight:bold; font-size:1.2rem;">[NAME]</div>
+                    <div style="color:grey;">Vocals</div>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://placehold.co/400x500/1a1a1a/FFF?text=Guitar" alt="Member">
+                <div class="card-content">
+                    <div style="font-weight:bold; font-size:1.2rem;">[NAME]</div>
+                    <div style="color:grey;">Guitar</div>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://placehold.co/400x500/1a1a1a/FFF?text=Bass" alt="Member">
+                <div class="card-content">
+                    <div style="font-weight:bold; font-size:1.2rem;">[NAME]</div>
+                    <div style="color:grey;">Bass</div>
+                </div>
+            </div>
+             <div class="card">
+                <img src="https://placehold.co/400x500/1a1a1a/FFF?text=Drums" alt="Member">
+                <div class="card-content">
+                    <div style="font-weight:bold; font-size:1.2rem;">[NAME]</div>
+                    <div style="color:grey;">Drums</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="reviews" class="testimonials">
+        <div class="section-header">
+            <h2 class="section-title">The Buzz</h2>
+        </div>
+        <div class="quote-box">
+            <i class="fa-solid fa-quote-left" style="font-size: 2rem; color: var(--primary); margin-bottom: 1rem;"></i>
+            <p class="quote-text">"Pure, unadulterated rock and roll energy that hasn't been seen in decades."</p>
+            <p style="color:var(--primary); font-weight:bold; margin-top:10px;">- Rolling Stone</p>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-container">
+            <div class="footer-block">
+                <h4>[BAND NAME]</h4>
+                <p>management@[band].com</p>
+                <p>+1 (555) 123-4567</p>
+            </div>
+            <div class="footer-block">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-spotify"></i></a>
+                    <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                </div>
+            </div>
+            <div class="footer-block">
+                <h4>Newsletter</h4>
+                <div style="display:flex; gap:5px;">
+                    <input type="email" placeholder="Email" style="padding:8px; border:none; width:100%;">
+                    <button style="padding:8px 15px; background:var(--primary); border:none; color:white; font-weight:bold;">GO</button>
+                </div>
+            </div>
+        </div>
+        <div style="text-align:center; padding-top:2rem; font-size:0.8rem; color:#666;">
+            &copy; 2025 [Band Name]. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script>
+        // 1. SELECT ELEMENTS
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+        const links = document.querySelectorAll('.nav-links li a');
+
+        // 2. TOGGLE MENU FUNCTION
+        hamburger.addEventListener('click', () => {
+            // Toggle the 'active' class on the menu
+            navLinks.classList.toggle('active');
+
+            // Toggle the icon between Bars and X
+            const icon = hamburger.querySelector('i');
+            if (navLinks.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+            } else {
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // 3. AUTO-CLOSE MENU WHEN LINK IS CLICKED
+        links.forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                const icon = hamburger.querySelector('i');
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            });
+        });
+
+        // 4. HERO SLIDER LOGIC
+        const slides = document.querySelectorAll('.slide');
+        let currentSlide = 0;
+
+        function nextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+        setInterval(nextSlide, 4000); // Change image every 4 seconds
+    </script>
+</body>
+</html>
