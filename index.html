@@ -290,6 +290,16 @@
     display: none;
     z-index: 9999;
 }
+        .testimonial {
+    display: none;
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+.testimonial.active {
+    display: block;
+    opacity: 1;
+}
 
 #backToTop:hover {
     background: white;
@@ -386,13 +396,40 @@
 </section>
 
 <section id="reviews" class="testimonials">
-<div class="section-header">
+    <div class="section-header">
         <h2 class="section-title">The Buzz</h2>
     </div>
+
     <div class="quote-box">
-        <i class="fa-solid fa-quote-left" style="font-size:2rem;color:var(--primary);margin-bottom:1rem;"></i>
-        <p class="quote-text">"Pure, unadulterated rock and roll energy that hasn't been seen in decades."</p>
-        <p style="color:var(--primary);font-weight:bold;margin-top:10px;">- Rolling Stone</p>
+        <div class="testimonial active">
+            <i class="fa-solid fa-quote-left" style="font-size:2rem;color:var(--primary);margin-bottom:1rem;"></i>
+            <p class="quote-text">
+                "Pure, unadulterated rock and roll energy that hasn't been seen in decades."
+            </p>
+            <p style="color:var(--primary);font-weight:bold;margin-top:10px;">
+                – Rolling Stone
+            </p>
+        </div>
+
+        <div class="testimonial">
+            <i class="fa-solid fa-quote-left" style="font-size:2rem;color:var(--primary);margin-bottom:1rem;"></i>
+            <p class="quote-text">
+                "A brutal yet refined sound, Dead Signal delivers with absolute authority."
+            </p>
+            <p style="color:var(--primary);font-weight:bold;margin-top:10px;">
+                – Kerrang!
+            </p>
+        </div>
+
+        <div class="testimonial">
+            <i class="fa-solid fa-quote-left" style="font-size:2rem;color:var(--primary);margin-bottom:1rem;"></i>
+            <p class="quote-text">
+                "An album that proves heavy music is alive and evolving."
+            </p>
+            <p style="color:var(--primary);font-weight:bold;margin-top:10px;">
+                – Metal Hammer
+            </p>
+        </div>
     </div>
 </section>
     <section id="tour">
@@ -605,6 +642,16 @@ function updateCountdown() {
         timerEl.innerHTML = "SHOWTIME";
         return;
     }
+    const testimonials = document.querySelectorAll('.testimonial');
+let testimonialIndex = 0;
+
+function showNextTestimonial() {
+    testimonials[testimonialIndex].classList.remove('active');
+    testimonialIndex = (testimonialIndex + 1) % testimonials.length;
+    testimonials[testimonialIndex].classList.add('active');
+}
+
+setInterval(showNextTestimonial, 5000);
 
     const days = Math.floor(distance / (1000 * 60 * 60 * 24));
     const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -621,6 +668,7 @@ setInterval(updateCountdown, 1000);
 
 </body>
 </html>
+
 
 
 
