@@ -107,34 +107,49 @@
             .nav-links a { font-size: 1.5rem; }
         }
 
-       .hero {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    background: black; /* fallback color */
-}
+        .hero-slider {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
 
-.hero-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: -1;
-}
+        .slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+        }
 
-.hero-content {
-    z-index: 2;
-    color: white;
-    padding: 0 1rem;
-}
+        .slide::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+        }
 
+        .slide.active { opacity: 1; }
+
+        .hero-content {
+            z-index: 2;
+            padding: 0 1rem;
+        }
+
+        .hero-content h1 {
+            font-family: var(--font-head);
+            font-size: 4rem;
+            text-transform: uppercase;
+            line-height: 1;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px black;
+        }
 
         .btn {
             display: inline-block;
@@ -366,15 +381,16 @@
     </ul>
 </nav>
 
-<section id="home" class="hero">
-    <img src="Band Photo.png" alt="Dead Signal Band Photo" class="hero-image">
+<div id="home" class="hero-slider">
+    <div class="slide active" style="background-image:url('Band Photo.png');"></div>
+
     <div class="hero-content">
         <h1>DEAD SIGNAL</h1>
-        <p>THE NEW ALBUM "5G ABYSS" – AVAILABLE NOW</p>
+        <p style="font-size:1.2rem;margin-bottom:2rem;">THE NEW ALBUM "5G ABYSS"– AVAILABLE NOW</p>
         <a href="https://www.spotify.com" target="_blank" class="btn">LISTEN NOW</a>
         <a href="#tour" class="btn btn-outline">TOUR DATES</a>
     </div>
-</section>
+</div>
 
 <section id="media">
     <div class="section-header">
@@ -629,6 +645,17 @@ prevBtn.addEventListener('click', () => {
         }, 4000);
     });
 });
+
+    const slides = document.querySelectorAll('.slide');
+    let currentSlide = 0;
+
+    function nextSlide() {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].classList.add('active');
+    }
+
+    setInterval(nextSlide, 4000);
     const backToTop = document.getElementById('backToTop');
 
 window.addEventListener('scroll', () => {
@@ -681,35 +708,3 @@ setInterval(updateCountdown, 1000);
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
