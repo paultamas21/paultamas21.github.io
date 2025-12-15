@@ -290,14 +290,42 @@
     display: none;
     z-index: 9999;
 }
-        .testimonial {
-    display: none;
+       .quote-box {
+    position: relative;
+    min-height: 180px;
+}
+
+.testimonial {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     opacity: 0;
     transition: opacity 1s ease;
+    pointer-events: none;
 }
 
 .testimonial.active {
-    display: block;
+    opacity: 1;
+    pointer-events: auto;
+}
+        .testimonial-dots {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.testimonial-dots .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #555;
+    opacity: 0.6;
+}
+
+.testimonial-dots .dot.active {
+    background: var(--primary);
     opacity: 1;
 }
 
@@ -430,6 +458,12 @@
                 – Metal Hammer
             </p>
         </div>
+        <div class="testimonial-dots">
+    <span class="dot active"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+</div>
+
     </div>
 </section>
     <section id="tour">
@@ -631,6 +665,22 @@ window.addEventListener('scroll', () => {
 backToTop.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 });
+    const testimonials = document.querySelectorAll('.testimonial');
+const dots = document.querySelectorAll('.testimonial-dots .dot');
+let testimonialIndex = 0;
+
+function showNextTestimonial() {
+    testimonials[testimonialIndex].classList.remove('active');
+    dots[testimonialIndex].classList.remove('active');
+
+    testimonialIndex = (testimonialIndex + 1) % testimonials.length;
+
+    testimonials[testimonialIndex].classList.add('active');
+    dots[testimonialIndex].classList.add('active');
+}
+
+setInterval(showNextTestimonial, 5000);
+    
     const concertDate = new Date("March 14, 2026 20:00:00").getTime();
 const timerEl = document.getElementById("timer");
 
@@ -642,16 +692,6 @@ function updateCountdown() {
         timerEl.innerHTML = "SHOWTIME";
         return;
     }
-    const testimonials = document.querySelectorAll('.testimonial');
-let testimonialIndex = 0;
-
-function showNextTestimonial() {
-    testimonials[testimonialIndex].classList.remove('active');
-    testimonialIndex = (testimonialIndex + 1) % testimonials.length;
-    testimonials[testimonialIndex].classList.add('active');
-}
-
-setInterval(showNextTestimonial, 5000);
 
     const days = Math.floor(distance / (1000 * 60 * 60 * 24));
     const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -668,6 +708,7 @@ setInterval(updateCountdown, 1000);
 
 </body>
 </html>
+
 
 
 
