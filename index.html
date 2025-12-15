@@ -188,8 +188,9 @@
         .media-carousel {
     max-width: 1100px;
     margin: 0 auto;
+    position: relative;
+    overflow: hidden;
 }
-
 .carousel-item {
     min-width: 100%;
     aspect-ratio: 16 / 9;
@@ -551,6 +552,20 @@ prevBtn.addEventListener('click', () => {
     carouselIndex = (carouselIndex - 1 + slidesCarousel.length) % slidesCarousel.length;
     updateCarousel();
 });
+    let autoplay = setInterval(() => {
+    carouselIndex = (carouselIndex + 1) % slidesCarousel.length;
+    updateCarousel();
+}, 4000);
+
+[nextBtn, prevBtn].forEach(btn => {
+    btn.addEventListener('click', () => {
+        clearInterval(autoplay);
+        autoplay = setInterval(() => {
+            carouselIndex = (carouselIndex + 1) % slidesCarousel.length;
+            updateCarousel();
+        }, 4000);
+    });
+});
 
     const slides = document.querySelectorAll('.slide');
     let currentSlide = 0;
@@ -576,6 +591,7 @@ backToTop.addEventListener('click', () => {
 
 </body>
 </html>
+
 
 
 
