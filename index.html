@@ -399,6 +399,14 @@
     <div class="section-header">
         <h2 class="section-title">Tour Dates</h2>
         <p>2026 European Run</p>
+        <div id="countdown" style="text-align:center;margin:2rem 0;">
+    <div style="font-family:var(--font-head);font-size:1.8rem;margin-bottom:10px;">
+        Next Show Starts In
+    </div>
+    <div id="timer" style="font-size:1.5rem;color:var(--primary);font-weight:bold;">
+        Loading...
+    </div>
+</div>
     </div>
 
     <div class="card-grid">
@@ -586,11 +594,34 @@ window.addEventListener('scroll', () => {
 backToTop.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 });
+    const concertDate = new Date("March 14, 2026 20:00:00").getTime();
+const timerEl = document.getElementById("timer");
+
+function updateCountdown() {
+    const now = new Date().getTime();
+    const distance = concertDate - now;
+
+    if (distance <= 0) {
+        timerEl.innerHTML = "SHOWTIME";
+        return;
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    timerEl.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+}
+
+updateCountdown();
+setInterval(updateCountdown, 1000);
 
 </script>
 
 </body>
 </html>
+
 
 
 
